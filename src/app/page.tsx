@@ -162,7 +162,7 @@ export default function GroupSeparatorApp() {
                   <Label htmlFor="people">Lista de Pessoas</Label>
                   <Textarea
                     id="people"
-                    placeholder="Ex: Lucas e Pamela, Pedro, Chiara, Fabio e Vanessa"
+                    placeholder="Ex: Lucas e Pâmela, Pedro, Fabio e Vanessa, Rodrigo"
                     value={peopleInput}
                     onChange={(e) => setPeopleInput(e.target.value)}
                     className="min-h-[100px] mt-2"
