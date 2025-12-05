@@ -34,6 +34,7 @@ export default function GroupSeparatorApp() {
   const [parsedPeople, setParsedPeople] = useState<Person[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [countdown, setCountdown] = useState<number | string>(3);
+  const [balanceCouples, setBalanceCouples] = useState(true);
 
   const parsePeople = (input: string): Person[] => {
     const items = input
@@ -101,10 +102,17 @@ export default function GroupSeparatorApp() {
     }));
 
     let currentGroupIndex = 0;
-    shuffledCouples.forEach((couple) => {
-      newGroups[currentGroupIndex].members.push(...couple);
-      currentGroupIndex = (currentGroupIndex + 1) % numGroups;
-    });
+    if (balanceCouples) {
+      shuffledCouples.forEach((couple) => {
+        newGroups[currentGroupIndex].members.push(...couple);
+        currentGroupIndex = (currentGroupIndex + 1) % numGroups;
+      });
+    } else {
+      shuffledCouples.forEach((couple) => {
+        const randomIndex = Math.floor(Math.random() * numGroups);
+        newGroups[randomIndex].members.push(...couple);
+      });
+    }
 
     currentGroupIndex = 0;
     shuffledSingles.forEach((single) => {
@@ -207,6 +215,26 @@ export default function GroupSeparatorApp() {
                     </p>
                   </div>
                 )}
+
+                <div className="flex items-center justify-between rounded-lg border p-3">
+                  <div>
+                    <Label htmlFor="balanceCouples" className="text-base">
+                      Balancear casais
+                    </Label>
+                    <p className="text-sm text-muted-foreground">
+                      {balanceCouples
+                        ? "Distribui os casais igualmente entre os grupos."
+                        : "Casais serão sorteados aleatoriamente."}
+                    </p>
+                  </div>
+                  <input
+                    id="balanceCouples"
+                    type="checkbox"
+                    checked={balanceCouples}
+                    onChange={(e) => setBalanceCouples(e.target.checked)}
+                    className="h-5 w-5 rounded border border-input"
+                  />
+                </div>
 
                 <Button
                   onClick={generateGroups}
