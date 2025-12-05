@@ -101,17 +101,6 @@ export default function GroupSeparatorApp() {
       members: [],
     }));
 
-    // Keeps total headcount balanced when casais are randomized.
-    const assignToLeastFilledGroup = (members: Person[]) => {
-      const smallestSize = Math.min(...newGroups.map((group) => group.members.length));
-      const candidateGroups = newGroups.filter(
-        (group) => group.members.length === smallestSize
-      );
-      const targetGroup =
-        candidateGroups[Math.floor(Math.random() * candidateGroups.length)];
-      targetGroup.members.push(...members);
-    };
-
     let currentGroupIndex = 0;
     if (balanceCouples) {
       shuffledCouples.forEach((couple) => {
@@ -120,21 +109,16 @@ export default function GroupSeparatorApp() {
       });
     } else {
       shuffledCouples.forEach((couple) => {
-        assignToLeastFilledGroup(couple);
+        const randomIndex = Math.floor(Math.random() * numGroups);
+        newGroups[randomIndex].members.push(...couple);
       });
     }
 
     currentGroupIndex = 0;
-    if (balanceCouples) {
-      shuffledSingles.forEach((single) => {
-        newGroups[currentGroupIndex].members.push(single);
-        currentGroupIndex = (currentGroupIndex + 1) % numGroups;
-      });
-    } else {
-      shuffledSingles.forEach((single) => {
-        assignToLeastFilledGroup([single]);
-      });
-    }
+    shuffledSingles.forEach((single) => {
+      newGroups[currentGroupIndex].members.push(single);
+      currentGroupIndex = (currentGroupIndex + 1) % numGroups;
+    });
 
     setGroups(newGroups);
     setIsGenerating(false);
